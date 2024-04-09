@@ -12,7 +12,7 @@ $scriptPath = $data['scriptPath'];
 $id_exam = $data['id_exam'];
 
 // Define the static string
-$staticPath = 'C:/xampp__/htdocs/api/result';
+$staticPath = 'C:/xampp/htdocs/api/result';
 
 // Execute the Python script with the static string and id_exam as arguments
 $output = shell_exec("python \"$scriptPath\" \"$staticPath\" \"$id_exam\"");
