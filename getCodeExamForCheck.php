@@ -14,13 +14,23 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// รับค่า username จาก parameter ของ GET request
+$username = $_GET['username'];
+
 // สร้างคำสั่ง SQL สำหรับการดึง id_exam และ code_subject โดยมีเงื่อนไขว่า id_exam ต้องพบในตาราง exam_answer_key และเชื่อมโยง code_subject จากตาราง subject
 $sql = "SELECT DISTINCT e.id_exam, e.name_exam, s.name_subject 
         FROM exam e
         JOIN exam_answer_key eak ON e.id_exam = eak.id_exam
-        JOIN subject s ON e.code_subject = s.code_subject;";
+        JOIN subject s ON e.code_subject = s.code_subject
+        WHERE s.username = ?";
 
-$result = $conn->query($sql);
+// เตรียมคำสั่ง SQL สำหรับการทำงานโดยใช้ prepared statement
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $username); // "s" หมายถึง string
+$stmt->execute();
+
+// ดึงผลลัพธ์
+$result = $stmt->get_result();
 
 $exams = array(); // เก็บข้อมูล exams ทั้งหมดในรูปแบบของ Array
 
@@ -33,6 +43,9 @@ if ($result->num_rows > 0) {
 
 // แปลง Array เป็นรูปแบบ JSON และส่งออก
 echo json_encode($exams);
+
+// ปิดคำสั่ง SQL
+$stmt->close();
 
 // ปิดการเชื่อมต่อกับฐานข้อมูล
 $conn->close();

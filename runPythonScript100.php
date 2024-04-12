@@ -1,7 +1,13 @@
 <?php
 
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
+// header("Access-Control-Allow-Origin: *");
+// header("Access-Control-Allow-Headers: Content-Type");
+
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
+
 
 // Get JSON payload from the request
 $json = file_get_contents('php://input');
@@ -10,7 +16,7 @@ $data = json_decode($json, true); // Decode as an associative array
 // Now extract 'scriptPath' and 'id_exam' from $data
 $scriptPath = $data['scriptPath'];
 $id_exam = $data['id_exam'];
-// var_dump($scriptPath);
+
 // Define the static string
 $staticPath = 'C:/xampp/htdocs/api/result';
 

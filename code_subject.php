@@ -1,47 +1,34 @@
 <?php
-header('Access-Control-Allow-Origin: *'); // อนุญาต CORS
-header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization'); // อนุญาตหัวข้อเหล่านี้
+
+header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // อนุญาตเมธอดที่คุณต้องการใช้
-
-
-// เชื่อมต่อกับฐานข้อมูล
 $conn = new mysqli('localhost', 'root', '', 'omr');
 
-// ตรวจสอบการเชื่อมต่อ
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// รับค่ารหัสวิชาจากการร้องขอ
-$code_subject = $_GET['code_subject'];
+$code_subject = $_GET['code_subject']; // รับ code_subject จาก query string
 
-// คำสั่ง SQL สำหรับค้นหาข้อมูลวิชาจากรหัสวิชา
-$sql = "SELECT * FROM subjects WHERE code_subject = '$code_subject'";
+// ใช้ prepared statement เพื่อป้องกัน SQL Injection
+$stmt = $conn->prepare("SELECT * FROM subject WHERE code_subject = ?");
+$stmt->bind_param("s", $code_subject); // "s" หมายถึง string
+$stmt->execute();
+$result = $stmt->get_result();
 
-// ประมวลผลคำสั่ง SQL
-$result = $conn->query($sql);
-
-// เตรียมข้อมูลเพื่อส่งกลับให้กับผู้ร้องขอ
-$response = array();
+$subjects = []; // สร้าง array สำหรับเก็บข้อมูลวิชาทั้งหมด
 
 if ($result->num_rows > 0) {
-    // วนลูปเพื่อเก็บข้อมูลที่ได้จากฐานข้อมูล
+    // วนลูปผ่านผลลัพธ์ทั้งหมดและเก็บเข้าไปใน array
     while($row = $result->fetch_assoc()) {
-        // เพิ่มข้อมูลลงในอาร์เรย์เพื่อส่งกลับ
-        $response[] = $row;
+        array_push($subjects, $row);
     }
+    echo json_encode($subjects); // ส่งข้อมูลวิชาทั้งหมดกลับเป็น JSON
 } else {
-    // ถ้าไม่พบข้อมูล
-    $response['success'] = false;
-    $response['message'] = 'Subject not found';
+    echo json_encode(['message' => 'No subjects found for this user.']);
 }
 
-// ปิดการเชื่อมต่อกับฐานข้อมูล
+$stmt->close();
 $conn->close();
-
-// ส่งข้อมูลกลับให้กับผู้ร้องขอในรูปแบบ JSON
-echo json_encode($response);
-
 ?>
