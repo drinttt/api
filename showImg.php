@@ -10,7 +10,7 @@ if(isset($_GET['id_exam'])) {
     $id_exam = $_GET['id_exam'];
     
     // Specify the directory containing images based on id_exam
-    $directory = "C:/xampp__/htdocs/api/result/{$id_exam}";
+    $directory = "C:/xampp/htdocs/api/result/{$id_exam}";
     $baseUrl = "http://localhost/api/result/{$id_exam}/";
     
     // Initialize an array to hold the image URLs

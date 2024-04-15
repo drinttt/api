@@ -11,11 +11,11 @@ if ($conn->connect_error) {
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
-$username = $data['username'];
-$password = $data['password'];
+$username = $data['username_ad'];
+$password = $data['password_ad'];
 
 // ตรวจสอบในตาราง user ก่อน
-$sql = "SELECT * FROM user WHERE username = '$username' AND password = '$password'";
+$sql = "SELECT * FROM admin WHERE username_ad = '$username' AND password_ad = '$password'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
