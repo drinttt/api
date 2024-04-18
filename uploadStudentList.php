@@ -24,7 +24,7 @@ if ($conn->connect_error) {
 
 if (!empty($data->id_exam) && !empty($data->id_student) && !empty($data->st_name)) {
     // สร้าง Query สำหรับเพิ่มข้อมูลลงในฐานข้อมูล
-    $query = "INSERT INTO student (id_exam, no_student, id_student, st_name, section) VALUES ('".$data->id_exam."', '".$data->no_student."', '".$data->id_student."', '".$data->st_name."', '".$data->section."')";
+    $query = "INSERT INTO student (id_exam, no_student, id_student, st_name) VALUES ('".$data->id_exam."', '".$data->no_student."', '".$data->id_student."', '".$data->st_name."')";
 
     // ประมวลผลคำสั่ง SQL
     if ($conn->query($query) === TRUE) {
