@@ -19,7 +19,7 @@ $sql = "SELECT * FROM admin WHERE username_ad = '$username' AND password_ad = '$
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-    echo json_encode(['success' => true, 'message' => 'User login successful', 'type' => 'user']);
+    echo json_encode(['success' => true, 'message' => 'User login successful', 'type' => 'admin']);
 } else {
     // ถ้าไม่พบในตาราง user ตรวจสอบในตาราง admin
     // $sql = "SELECT * FROM admin WHERE username_ad = '$username' AND password_ad = '$password'";

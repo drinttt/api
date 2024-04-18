@@ -21,44 +21,34 @@ if (!empty($data->username)) {
     // เริ่ม Transaction
     $conn->begin_transaction();
 
-    // ลบข้อมูลในตาราง exam_answer_key, student_answer, และ student ที่เป็นลูกของตาราง exam
-    $sql_delete_exam_data = "DELETE exam_answer_key, student_answer, student
-                             FROM exam
-                             LEFT JOIN exam_answer_key ON exam.id_exam = exam_answer_key.id_exam
-                             LEFT JOIN student_answer ON exam.id_exam = student_answer.id_exam
-                             LEFT JOIN student ON exam.id_exam = student.id_exam
-                             WHERE exam.code_subject IN (SELECT code_subject FROM subject WHERE username = ?)";
-    $stmt_delete_exam_data = $conn->prepare($sql_delete_exam_data);
-    $stmt_delete_exam_data->bind_param("s", $data->username);
-    $stmt_delete_exam_data->execute();
-    $stmt_delete_exam_data->close();
+    // คำสั่ง SQL สำหรับลบข้อมูล
+    $sql_delete_data = "DELETE user, subject, exam, exam_answer_key, student_answer, student
+                        FROM user
+                        LEFT JOIN subject ON user.username = subject.username
+                        LEFT JOIN exam ON subject.code_subject = exam.code_subject
+                        LEFT JOIN exam_answer_key ON exam.id_exam = exam_answer_key.id_exam
+                        LEFT JOIN student_answer ON exam.id_exam = student_answer.id_exam
+                        LEFT JOIN student ON exam.id_exam = student.id_exam
+                        WHERE user.username = ?";
+    $stmt_delete_data = $conn->prepare($sql_delete_data);
+    $stmt_delete_data->bind_param("s", $data->username);
 
-    // ลบข้อมูลในตาราง exam
-    $sql_delete_exam = "DELETE FROM exam WHERE code_subject IN (SELECT code_subject FROM subject WHERE username = ?)";
-    $stmt_delete_exam = $conn->prepare($sql_delete_exam);
-    $stmt_delete_exam->bind_param("s", $data->username);
-    $stmt_delete_exam->execute();
-    $stmt_delete_exam->close();
+    // ประมวลผลคำสั่ง SQL
+    $success = $stmt_delete_data->execute();
 
-    // ลบข้อมูลในตาราง subject
-    $sql_delete_subject = "DELETE FROM subject WHERE username = ?";
-    $stmt_delete_subject = $conn->prepare($sql_delete_subject);
-    $stmt_delete_subject->bind_param("s", $data->username);
-    $stmt_delete_subject->execute();
-    $stmt_delete_subject->close();
+    // ตรวจสอบว่าการ execute สำเร็จหรือไม่ และ commit หรือ rollback transaction ตามความเป็นไปได้
+    if ($success) {
+        // สำเร็จ ทำการ Commit Transaction
+        $conn->commit();
+        echo json_encode(array("message" => "Data deleted successfully."));
+    } else {
+        // ไม่สำเร็จ ทำการ Rollback Transaction
+        $conn->rollback();
+        echo json_encode(array("message" => "Error deleting data."));
+    }
 
-    // ลบข้อมูลในตาราง user
-    $sql_delete_user = "DELETE FROM user WHERE username = ?";
-    $stmt_delete_user = $conn->prepare($sql_delete_user);
-    $stmt_delete_user->bind_param("s", $data->username);
-    $stmt_delete_user->execute();
-    $stmt_delete_user->close();
-
-    // Commit Transaction หลังจากทำการลบข้อมูลทั้งหมดเรียบร้อยแล้ว
-    $conn->commit();
-    echo json_encode(array("message" => "Data deleted successfully."));
-
-    // ปิดการเชื่อมต่อฐานข้อมูล
+    // ปิดคำสั่ง prepare และการเชื่อมต่อฐานข้อมูล
+    $stmt_delete_data->close();
     $conn->close();
 } else {
     echo json_encode(array("message" => "Data is incomplete."));
