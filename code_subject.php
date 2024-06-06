@@ -9,22 +9,20 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$code_subject = $_GET['code_subject']; // รับ code_subject จาก query string
+$code_subject = $_GET['code_subject'];
 
-// ใช้ prepared statement เพื่อป้องกัน SQL Injection
 $stmt = $conn->prepare("SELECT * FROM subject WHERE code_subject = ?");
-$stmt->bind_param("s", $code_subject); // "s" หมายถึง string
+$stmt->bind_param("s", $code_subject); 
 $stmt->execute();
 $result = $stmt->get_result();
 
-$subjects = []; // สร้าง array สำหรับเก็บข้อมูลวิชาทั้งหมด
+$subjects = []; 
 
 if ($result->num_rows > 0) {
-    // วนลูปผ่านผลลัพธ์ทั้งหมดและเก็บเข้าไปใน array
     while($row = $result->fetch_assoc()) {
         array_push($subjects, $row);
     }
-    echo json_encode($subjects); // ส่งข้อมูลวิชาทั้งหมดกลับเป็น JSON
+    echo json_encode($subjects);
 } else {
     echo json_encode(['message' => 'No subjects found for this user.']);
 }

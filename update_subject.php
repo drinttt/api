@@ -18,7 +18,7 @@ $code_subject = $_POST['code_subject'] ?? '';
 $host = "localhost";
 $db_name = "omr";
 $username = "root";
-$password = ""; // ใส่รหัสผ่านของคุณเองที่นี่หากมี
+$password = "";
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name", $username, $password);

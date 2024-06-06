@@ -1,5 +1,4 @@
 <?php
-// เปิดใช้งานการแสดงข้อผิดพลาด
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -14,7 +13,7 @@ $data = json_decode(file_get_contents("php://input"));
 $host = "localhost";
 $db_name = "omr";
 $username = "root";
-$password = ""; // ใส่รหัสผ่านของคุณเองที่นี่หากมี
+$password = ""; 
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name", $username, $password);
@@ -30,10 +29,8 @@ try {
         $stmt->bindParam(":id_student", $data->id_student);
 
         if ($stmt->execute()) {
-            // ส่งค่ากลับเมื่ออัพเดทสำเร็จ
             echo json_encode(array('success' => true, 'message' => 'Score updated successfully.'));
         } else {
-            // ส่งค่ากลับเมื่ออัพเดทไม่สำเร็จ
             echo json_encode(array('success' => false, 'message' => 'Failed to update score.'));
         }
     } else {

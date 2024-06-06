@@ -3,7 +3,6 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Connect to database
 $dbHost = "localhost";
 $dbUsername = "root";
 $dbPassword = "";
@@ -15,10 +14,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Assuming you receive the exam ID
 $examId = isset($_POST['id_exam']) ? $_POST['id_exam'] : '';
 
-// Define the directory based on the exam ID
 $targetDir = "uploads/" . $examId . "/";
 
 // Check if the directory exists, if not, create it

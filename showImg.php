@@ -40,3 +40,4 @@ if(isset($_GET['id_exam'])) {
     echo json_encode(["error" => "id_exam parameter is required"]);
 }
 ?>
+

@@ -18,10 +18,8 @@ if (!empty($data->username)) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // เริ่ม Transaction
     $conn->begin_transaction();
 
-    // คำสั่ง SQL สำหรับลบข้อมูล
     $sql_delete_data = "DELETE user, subject, exam, exam_answer_key, student_answer, student
                         FROM user
                         LEFT JOIN subject ON user.username = subject.username
@@ -33,21 +31,16 @@ if (!empty($data->username)) {
     $stmt_delete_data = $conn->prepare($sql_delete_data);
     $stmt_delete_data->bind_param("s", $data->username);
 
-    // ประมวลผลคำสั่ง SQL
     $success = $stmt_delete_data->execute();
 
-    // ตรวจสอบว่าการ execute สำเร็จหรือไม่ และ commit หรือ rollback transaction ตามความเป็นไปได้
     if ($success) {
-        // สำเร็จ ทำการ Commit Transaction
         $conn->commit();
         echo json_encode(array("message" => "Data deleted successfully."));
     } else {
-        // ไม่สำเร็จ ทำการ Rollback Transaction
         $conn->rollback();
         echo json_encode(array("message" => "Error deleting data."));
     }
 
-    // ปิดคำสั่ง prepare และการเชื่อมต่อฐานข้อมูล
     $stmt_delete_data->close();
     $conn->close();
 } else {

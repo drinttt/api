@@ -1,44 +1,4 @@
 <?php
-// header('Access-Control-Allow-Origin: *');
-// header('Content-Type: application/json');
-// header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
-// header("Access-Control-Max-Age: 3600");
-// header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
-
-// $data = json_decode(file_get_contents("php://input"));
-
-// if (!empty($data->id_exam)) {
-//     $servername = "localhost";
-//     $username = "root";
-//     $password = "";
-//     $dbname = "omr";
-
-//     $conn = new mysqli($servername, $username, $password, $dbname);
-
-//     if ($conn->connect_error) {
-//         die("Connection failed: " . $conn->connect_error);
-//     }
-
-//     $sql = "DELETE FROM exam WHERE id_exam = ?";
-
-//     if ($stmt = $conn->prepare($sql)) {
-//         $stmt->bind_param("s", $data->id_exam);
-
-//         if ($stmt->execute()) {
-//             echo json_encode(array("message" => "Students deleted successfully."));
-//         } else {
-//             echo json_encode(array("message" => "Unable to delete students."));
-//         }
-//         $stmt->close();
-//     } else {
-//         echo json_encode(array("message" => "Unable to prepare the statement."));
-//     }
-
-//     $conn->close();
-// } else {
-//     echo json_encode(array("message" => "Data is incomplete."));
-// }
-
 
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
@@ -87,11 +47,9 @@ if (!empty($data->id_exam)) {
 
     // ทำการลบข้อมูลตามลำดับ
     if ($stmt_delete_student_answer->execute() && $stmt_delete_exam_answer_key->execute() && $stmt_delete_student->execute() && $stmt_delete_exam->execute()) {
-        // Commit Transaction หากไม่มีข้อผิดพลาด
         $conn->commit();
         echo json_encode(array("message" => "Data deleted successfully."));
     } else {
-        // Rollback Transaction หากเกิดข้อผิดพลาด
         $conn->rollback();
         echo json_encode(array("message" => "Error deleting data."));
     }
@@ -102,7 +60,6 @@ if (!empty($data->id_exam)) {
     $stmt_delete_student->close();
     $stmt_delete_exam->close();
 
-    // ปิดการเชื่อมต่อฐานข้อมูล
     $conn->close();
 } else {
     echo json_encode(array("message" => "Data is incomplete."));

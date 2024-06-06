@@ -14,7 +14,7 @@ $data = json_decode(file_get_contents("php://input"));
 $host = "localhost";
 $db_name = "omr";
 $username = "root";
-$password = ""; // ใส่รหัสผ่านของคุณเองที่นี่หากมี
+$password = ""; 
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name", $username, $password);
@@ -32,19 +32,15 @@ try {
         $stmt->bindParam(":username", $data->username);
 
         if ($stmt->execute()) {
-            // ส่งค่ากลับเมื่ออัพเดทสำเร็จ
             echo json_encode(array('success' => true, 'message' => 'User data updated successfully.'));
         } else {
-            // ส่งค่ากลับเมื่ออัพเดทไม่สำเร็จ
             echo json_encode(array('success' => false, 'message' => 'Failed to update user data.'));
         }
     } else {
-        // ส่งค่ากลับเมื่อข้อมูลไม่ครบถ้วน
         echo json_encode(array('success' => false, 'message' => 'Incomplete Data.'));
     }
 
 } catch(PDOException $exception) {
-    // ส่งค่ากลับเมื่อเกิดข้อผิดพลาด
     echo json_encode(array('success' => false, 'message' => 'ERROR: ' . $exception->getMessage()));
 }
 ?>

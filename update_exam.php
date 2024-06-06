@@ -1,5 +1,4 @@
 <?php
-// เปิดใช้งานการแสดงข้อผิดพลาด
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -16,7 +15,7 @@ $id_exam = $_POST['id_exam'] ?? '';
 $host = "localhost";
 $db_name = "omr";
 $username = "root";
-$password = ""; // ใส่รหัสผ่านของคุณเองที่นี่หากมี
+$password = "";
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name", $username, $password);

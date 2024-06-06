@@ -1,23 +1,18 @@
 <?php
-header("Access-Control-Allow-Origin: *"); // อนุญาตการร้องขอจากทุกต้นทาง
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // อนุญาตเมธอดที่ระบุ
-header("Access-Control-Allow-Headers: Content-Type, Authorization"); // อนุญาตส่วนหัวที่ระบุ
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// ตรวจสอบว่าเป็นการร้องขอ OPTIONS หรือไม่
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    // หากเป็นการร้องขอ OPTIONS, ให้ตอบกลับและหยุดการดำเนินการต่อ
     exit;
 }
-// ทำการเชื่อมต่อฐานข้อมูล
 $servername = "localhost";
-$username = "root"; // ชื่อผู้ใช้ของฐานข้อมูล
-$password = ""; // รหัสผ่านของฐานข้อมูล
-$dbname = "omr"; // ชื่อฐานข้อมูล
+$username = "root"; 
+$password = ""; 
+$dbname = "omr";
 
-// สร้างการเชื่อมต่อ
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// ตรวจสอบการเชื่อมต่อ
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
@@ -28,7 +23,6 @@ $name = $_POST['name'];
 $surname = $_POST['surname'];
 $email = $_POST['email'];
 
-// เตรียมคำสั่ง SQL เพื่อเพิ่มข้อมูลลงในตาราง exam
 $sql = "INSERT INTO user (username, password, name, surname, email) VALUES ('$username', '$password', '$name', '$surname', '$email')";
 
 if ($conn->query($sql) === TRUE) {
@@ -39,6 +33,5 @@ if ($conn->query($sql) === TRUE) {
   echo json_encode($response);
 }
 
-// ปิดการเชื่อมต่อฐานข้อมูล
 $conn->close();
 ?>

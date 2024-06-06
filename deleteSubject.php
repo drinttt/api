@@ -19,7 +19,6 @@ if (!empty($data->code_subject)) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // เริ่ม Transaction
     $conn->begin_transaction();
 
     // ลบข้อมูลในตาราง exam
@@ -46,11 +45,9 @@ if (!empty($data->code_subject)) {
 
     // ทำการลบข้อมูลตามลำดับ
     if ($stmt_delete_exam_data->execute() && $stmt_delete_exam->execute() && $stmt_delete_subject->execute()) {
-        // Commit Transaction หากไม่มีข้อผิดพลาด
         $conn->commit();
         echo json_encode(array("message" => "Data deleted successfully."));
     } else {
-        // Rollback Transaction หากเกิดข้อผิดพลาด
         $conn->rollback();
         echo json_encode(array("message" => "Error deleting data."));
     }
@@ -60,7 +57,6 @@ if (!empty($data->code_subject)) {
     $stmt_delete_exam->close();
     $stmt_delete_subject->close();
 
-    // ปิดการเชื่อมต่อฐานข้อมูล
     $conn->close();
 } else {
     echo json_encode(array("message" => "Data is incomplete."));
